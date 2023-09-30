@@ -31,11 +31,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  TextEditingController searchControler = TextEditingController();
+  String search = '';
+
 
   void _incrementCounter() {
     setState(() {
-      _counter++;
+
     });
   }
 
@@ -47,29 +49,61 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                  itemCount: 100,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              'https://media.licdn.com/dms/image/D4D03AQHxokPY-fRQyg/profile-displayphoto-shrink_800_800/0/1691647057439?e=2147483647&v=beta&t=IDZ7AhZd9jSbdLj2KP0ATAoyzL1Gl7wh-jccHeAvbZY'),
-                        ),
-                        title: Text(
-                          'Shoaib Farooq',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          'Data Scientist',
-                          style: TextStyle(fontWeight: FontWeight.normal),
-                        ));
-                  }),
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                controller: searchControler,
+                decoration: const InputDecoration(
+                    hintText: 'Search Somthing....',
+                    border: OutlineInputBorder()),
+                onChanged: (String? value) {
+                  setState(() {
+                    search = value.toString();
+                  });
+                },
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: 5000,
+                    itemBuilder: (context, index) {
+                      late String Position = index.toString();
+                      if (searchControler.text.isEmpty) {
+                        return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  'https://media.licdn.com/dms/image/D4D03AQHxokPY-fRQyg/profile-displayphoto-shrink_800_800/0/1691647057439?e=2147483647&v=beta&t=IDZ7AhZd9jSbdLj2KP0ATAoyzL1Gl7wh-jccHeAvbZY'),
+                            ),
+                            title: Text('Shoaib Farooq $index'),
+                            subtitle: Text('Hello'));
+                      } else if (Position.toLowerCase()
+                          .contains(searchControler.text.toLowerCase())) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                'https://media.licdn.com/dms/image/D4D03AQHxokPY-fRQyg/profile-displayphoto-shrink_800_800/0/1691647057439?e=2147483647&v=beta&t=IDZ7AhZd9jSbdLj2KP0ATAoyzL1Gl7wh-jccHeAvbZY'),
+                          ),
+                          title: RichText(
+                            text: TextSpan(
+                              text: 'Shoaib  ',
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                                TextSpan(text: index.toString(),
+                                style: TextStyle(color: Colors.red))
+                              ]
+                            ),
+
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }),
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
